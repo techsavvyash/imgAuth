@@ -5,8 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> IMGAuth-Register </title>
+    <script async src = "../js/axios.min.js"></script>
+    <script async src = "../js/register.js"></script>
 </head>
 <body>
-    <h1>Hey There, this is the registration page!</h1>
+    <h1>Hey, there this is the registration page!!</h1>
+    <div>
+    <!-- <form id = "loginForm" action = "/login" method = "POST"> -->
+        <label> username </label>
+        <input id="userName" type="text"> <br>
+        <div> Click your password points in the image below </div>
+        <div id ="counter">
+            Points: 0
+        </div>
+        <div id = "img" >
+            <img src = "../black-suv-761815.jpg" alt="pwd_img" id ="pwd_img">
+        </div>
+        <div>
+            <button type = "submit" id="registerBtn"> Register </button>
+            <button id = "cancel"> Discard Last Click </button>
+        </div>
+    <!-- </form> -->
+    </div>
 </body>
 </html>
