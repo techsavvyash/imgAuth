@@ -11,6 +11,9 @@ let pwd = []
 pwd_img.addEventListener("click", (event) => {
     x = event.offsetX; y = event.offsetY ;
     count++ ;
+    if(count >= 8) {
+        registerBtn.disabled = false ;
+    }
     counter.innerHTML = "Points: " + count ;
     pwd.push(x,y)
     console.log(x, y)
@@ -21,6 +24,9 @@ cancel.onclick = (event) => {
     pwd.pop() ;
     pwd.pop() ;
     count-- ;
+    if(count < 8) {
+        registerBtn.disabled = true ;
+    }
     counter.innerHTML = "Points: " + count ;
 }
 

@@ -7,7 +7,7 @@ const { db, Users } = require('./db.js')
 
 function generateJWT(username) {
   //the jwt contains the username and expires in 5 minutes
-  return jwt.sign(username, process.env.JWT_SECRET, /*{ expiresIn: 5*60*1000} */) ;
+  return jwt.sign({username}, process.env.JWT_SECRET, { expiresIn: 5*60*1000 }) ;
 }
 
 // middlewares
@@ -17,7 +17,8 @@ app.use('/', express.static(__dirname + '/public'))
 app.use(session({
   secret: process.env.SESSION_SECRET,
   saveUninitialized: true,
-  resave: true
+  resave: true,
+  SameSite: 'strict',
 }))
 
 async function checkCredentials(req, res, next) {
@@ -51,6 +52,26 @@ async function checkCredentials(req, res, next) {
   }
 }
 
+async function checkToken(req, res, next) {
+  const token = req.session.token ;
+  if(token == null) {
+    res.user = null ;
+    next()
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if(err) {
+      req.user = null ;
+      next() ;
+    }
+
+    req.user = user ;
+    next() ;
+  })
+
+
+}
+
 // route handlers
 app.get('/login', (req, res) => {
   res.sendFile(__dirname + '/public/pages/login.html')
@@ -58,6 +79,14 @@ app.get('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
   res.sendFile(__dirname + '/public/pages/register.html')
+})
+
+app.get('/success', checkToken, (req, res) => {
+  if(req.user == null) {
+    res.redirect('/login')
+    return ;
+  }
+  res.sendFile(__dirname + '/public/pages/success.html')
 })
 
 //login route
@@ -72,11 +101,11 @@ app.post('/login', checkCredentials, (req, res) => {
   try {
     const enteredPwd = pwd.split(',') ;
     const userPwd = user.pwd.split(',') ;
-    console.log("Entered Pwd: ", enteredPwd) ;
-    console.log("UserPwd: ", userPwd)
+    //console.log("Entered Pwd: ", enteredPwd) ;
+    //console.log("UserPwd: ", userPwd)
     if(enteredPwd.length !== userPwd.length) {
       res.send({status: false, message: "invalid credentials"}) ;
-      return ;
+      return ; 
     }
     let isAMatch = true ;
     for(let i = 0 ; i < enteredPwd.length; i++) {
@@ -89,8 +118,9 @@ app.post('/login', checkCredentials, (req, res) => {
     if(!isAMatch) {
       res.send({status: false, message: "invalid credentials"})
     } else {
-      //req.session.token = generateJWT(user.username) ;
+      req.session.token = generateJWT(user.username) ;
       res.send({status: true, message: "login succesful"})
+      //res.redirect('/success')
     }
   } catch(err) {
     console.log(err);
