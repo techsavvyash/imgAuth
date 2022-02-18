@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> IMGAuth-Login </title>
+    <script async src="../js/axios.min.js"></script>
+    <script async defer src ="../js/login.js"></script>
+</head>
+<body>
+    <h1>Hey, there this is the login page!!</h1>
+    <div>
+    <form id = "loginForm" action = "/login" method = "POST">
+        <label> username </label>
+        <input id="username" type="text"> <br>
+        <div> Click your password points in the image below </div>
+        <div id ="counter">
+            Points: 0
+        </div>
+        <div id = "img" >
+            <img src = "../black-suv-761815.jpg" alt="pwd_img" id ="pwd_img">
+        </div>
+        <input type="hidden" id = "pwd">
+        <div>
+            <button type ="submit" id="loginBtn"> Login </button>
+            <button id = "cancel"> Discard Last Click </button>
+        </div>
+    </form>
+    </div>
+</body>
+</html>
