@@ -25,92 +25,97 @@ async function checkCredentials(req, res, next) {
   if(!username || !pwd) {
     res.send({status: false, message: "invalid credentials"}) ;
     return ;
+  } else {
+    const password = pwd.split(',')
+    let check = password.every(val => !isNaN(val))
+    if(!check || password.length < 16) {
+      res.send({status: false, message: "invalid credentials"});
+      return ;
+    } else if(check && password.length >= 16) {
+      check = password.every((val, i) => ((i&1) ? parseFloat(val) <= 768 && parseFloat(val) >= 0 : parseFloat(val) <= 1024 && parseFloat(val) >= 0))
+      if(!check) {
+        res.send({status: false, message: "invalid credentials!"});
+        return ;
+      }
+    }
   }
+
   try {
     const user = await Users.findOne({ where: {username}})
     req.user = user ;
     next() ;
   } catch(err) {
+    console.log(err)
     res.send({status: false, message: err}) ;
     return ;
   }
 }
 
-
+// route handlers
 app.get('/login', (req, res) => {
   res.sendFile(__dirname + '/public/pages/login.html')
 })
 
 app.get('/register', (req, res) => {
-    res.sendFile(__dirname + '/public/pages/register.html')
+  res.sendFile(__dirname + '/public/pages/register.html')
 })
 
 //login route
-app.post('/login', async (req, res) => {
-  const { username, pwd } = req.body 
-  
-  if(!username || !pwd) {
+app.post('/login', checkCredentials, (req, res) => {
+  const { username, pwd} = req.body
+  const user = req.user ; 
+  if(req.user == null) {
     res.send({status: false, message: "invalid credentials"}) ;
-  } else {
-    try {
-      const user = await Users.findOne({ where: { username: username}})
-      if(user == null) {
-        res.send({status: false, message: "invalid credentials"}) ;
-      } else {
-        const enteredPwd = pwd.split(',') ;
-        const userPwd = user.pwd.split(',') ;
-        if(enteredPwd.length !== userPwd.length) {
-          res.send({status: false, message: "invalid credentials"}) ;
-        } else {
-          let isAMatch = true ;
-          for(let i = 0;i < enteredPwd.length; i++) {
-            if(!(enteredPwd[i] <= (userPwd[i] + 10) && enteredPwd[i] >= (userPwd[i] - 10))) {
-              isAMatch = false ;
-              break ;
-            }
-          }
-
-          if(!isAMatch) {
-            res.send({status: false, message: "invalid credentials"})
-          } else {
-            req.session.token = generateJWT(user.username) ;
-            res.send({status: true, message: "login succesful"})
-          }
-        }
-      } 
-    } catch(err) {
-      res.send({status: false, message: err})
+    return ;
+  }
+  
+  try {
+    const enteredPwd = pwd.split(',') ;
+    const userPwd = user.pwd.split(',') ;
+    console.log("Entered Pwd: ", enteredPwd) ;
+    console.log("UserPwd: ", userPwd)
+    if(enteredPwd.length !== userPwd.length) {
+      res.send({status: false, message: "invalid credentials"}) ;
+      return ;
     }
-  } 
+    let isAMatch = true ;
+    for(let i = 0 ; i < enteredPwd.length; i++) {
+      if(!(parseFloat(enteredPwd[i]) <= (parseFloat(userPwd[i]) + 10) && parseFloat(enteredPwd[i]) >= (parseFloat(userPwd[i]) - 10))) {
+        console.log("False at: ", i+1);
+        isAMatch = false ;
+        break ;
+      }
+    }
+    if(!isAMatch) {
+      res.send({status: false, message: "invalid credentials"})
+    } else {
+      //req.session.token = generateJWT(user.username) ;
+      res.send({status: true, message: "login succesful"})
+    }
+  } catch(err) {
+    console.log(err);
+    res.send({status: false, message: err})
+  }
 });
 
 
 //register route
 app.post('/register', checkCredentials, async (req, res) => {
   if(req.user) {
+    // case when the username is already taken
     res.send({staus: false, message: "User already exists, kindly login!"});
     return ;
   }
-
-  const pwd = req.body.pwd.split(',') ;
-  let check = pwd.every(val => !isNaN(val))
-
-  if(check || pwd.length < 16) {
-    check = pwd.every((val, i) => ((i&1) ? parseFloat(val) <= 768 && parseFloat(val) >= 0 : parseFloat(val) <= 1024 && parseFloat(val) >= 0))
-    if(check) {
-      try {
-        const user = await Users.create({username: req.body.username, pwd: req.body.pwd}) ;
-        console.log(user.username)
-        req.session.token = generateJWT(user.username);
-        res.send({status: true, message: "user created successfully and you have been logged in!"});
-      } catch(err) {
-        console.log(err);
-        res.send({status: false, message: err}) ;
-      }
-      
-    }
-  } else {
-    res.send({status: false, message: "invalid credentials, please register again!"}) ;
+  // else all the discrepencies in the credentials have already been taken care of
+  // by the checkCredentials middleware so we just create a user and log him in
+  try {
+    const user = await Users.create({username: req.body.username, pwd: req.body.pwd}) ;
+    console.log(user.username)
+    req.session.token = generateJWT(user.username);
+    res.send({status: true, message: "user created successfully and you have been logged in!"});
+  } catch(err) {
+    console.log(err);
+    res.send({status: false, message: err}) ;
   }
 });
 
@@ -118,7 +123,7 @@ app.post('/register', checkCredentials, async (req, res) => {
 // starting the server if db starts up fine
 db.sync().then(
   app.listen(process.env.PORT || 8080, () => {
-      console.log(`http://127.0.0.1:${process.env.PORT || 8080}`) ;
+    console.log(`http://127.0.0.1:${process.env.PORT || 8080}`) ;
   })
 ).catch((err)=> {
   console.error(new Error(err))
