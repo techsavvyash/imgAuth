@@ -13,6 +13,10 @@ const Users = db.define('user', {
     primaryKey: true,
     autoIncrement: true,
   },
+  name: {
+    type: Sequelize.DataTypes.STRING(50),
+    allowNull: false,
+  },
   username: {
     type: Sequelize.DataTypes.STRING(127),
     allowNull: false,  
@@ -21,6 +25,10 @@ const Users = db.define('user', {
   pwd: {
     type: Sequelize.DataTypes.STRING(150),
     allowNull: false
+  },
+  otp: {
+    type: Sequelize.DataTypes.BIGINT,
+    allowNull: true
   }
 });
 

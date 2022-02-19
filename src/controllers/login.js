@@ -1,5 +1,5 @@
 const path = require('path')
-const generateJWT = require('../util/generateJWT').generateJWT
+const generateJWT = require('../util/utils').generateJWT
 
 
 exports.getLogin = (req, res) => {

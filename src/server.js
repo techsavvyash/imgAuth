@@ -5,7 +5,8 @@ const session = require('express-session') ;
 require('dotenv').config() ;
 const { db, Users } = require('./config/db.js') ;
 const {checkToken, findUser, checkCredentials} = require("./controllers/middleware")
-const path = require('path')
+const path = require('path');
+const { validateEmail, generateOTP, sendEmail, generateJWT } = require('./util/utils.js');
 
 // middlewares
 app.use(express.json())
