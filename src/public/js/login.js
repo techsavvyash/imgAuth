@@ -39,6 +39,7 @@ loginBtn.onclick = (event) => {
         if(res.data.status) {
             window.location = '/success'
         } else {
+            console.log(res.data)
             alert("Invalid credentials, click the points in the same sequence as done during registration")
         }
     } )

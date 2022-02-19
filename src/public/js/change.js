@@ -35,10 +35,10 @@ registerBtn.onclick = (event) => {
         username: userName.value,
         pwd: pwd.toString()
     }
-    axios.post('/register', data).then(res => {
+    axios.post('/change', data).then(res => {
         alert(res.data.message)
         if(res.data.status) {
-            window.location = '/success'
+            window.location = '/login'
         }  
     })
 }

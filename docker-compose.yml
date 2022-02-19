@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  src:
+    image: src
+    build:
+      context: src
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+      JWT_SECRET: 'YOUR JWT SECRET HERE'
+      PORT: 8080
+      SESSION_SECRET: 'YOUR SESSION SECRET HERE'
+    ports:
+      - 8080:8080
