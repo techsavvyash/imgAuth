@@ -9,6 +9,6 @@ submitBtn.onclick = (event) => {
     }
 
     axios.post('/forgot', data).then(res => {
-        alert(res.data)
+        alert(res.data.message)
     }).catch(err => alert(err))
 }
