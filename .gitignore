@@ -1,9 +1,6 @@
 test.py
 node_modules
 .vscode
-.dockerignore
-docker*
-Docker*
 **/*.db
 # Byte-compiled / optimized / DLL files
 __pycache__/
