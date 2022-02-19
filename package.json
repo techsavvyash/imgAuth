@@ -4,6 +4,7 @@
   "description": "implementation of the passpoints graphical user login strategy for GAWDS induction task",
   "main": "index.js",
   "scripts": {
+    "start": "cd src && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/techsavvyash/imgAuth/issues"
   },
-  "homepage": "https://github.com/techsavvyash/imgAuth#readme",
-  "script":{
-    "start": "cd src && node server.js"
-  }
+  "homepage": "https://github.com/techsavvyash/imgAuth#readme"
 }
