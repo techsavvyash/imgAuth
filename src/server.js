@@ -24,7 +24,7 @@ app.set('view engine', 'hbs')
 app.use(require("./routes/login"))
 app.use( require("./routes/register"))
 app.use( require('./routes/change'))
-
+app.use(require('./routes/forgot'))
 
 app.get('/success', checkToken, findUser,  async (req, res) => {
  if(req.user == null) {

@@ -19,7 +19,6 @@ pwd_img.addEventListener("click", (event) => {
     }
     x = (event.offsetX)/ratio; y = (event.offsetY)/ratio ;
     pwd.push(x,y)
-    console.log(x, y)
     password.value = pwd.toString();
 })
 
