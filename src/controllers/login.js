@@ -1,9 +1,9 @@
 const path = require('path')
-const generateJWT = require('../util/generateJWT').generateJWT
+const generateJWT = require('../util/utils').generateJWT
 
 
 exports.getLogin = (req, res) => {
-    if(req.user == null) res.sendFile(path.join(__dirname, '../public/pages/login.html'))
+    if(req.user == null) res.sendFile(path.join(__dirname, '../../public/pages/login.html'))
     else res.redirect('/success')
 }
 
@@ -18,8 +18,8 @@ exports.postLogin = (req, res) => {
     try {
       const enteredPwd = pwd.split(',') ;
       const userPwd = user.pwd.split(',') ;
-      console.log("Entered Pwd: ", enteredPwd) ;
-      console.log("UserPwd: ", userPwd)
+      //console.log("Entered Pwd: ", enteredPwd) ;
+      //console.log("UserPwd: ", userPwd)
       if(enteredPwd.length !== userPwd.length) {
         res.send({status: false, message: "invalid credentials"}) ;
         return ; 

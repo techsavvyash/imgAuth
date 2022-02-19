@@ -62,6 +62,20 @@ function checkToken(req, res, next) {
   next()
 }
 
+function verifyToken(req, res, next) {
+  const id = req.params.id ;
+  req.user = null ;
+  jwt.verify(token, process.env.FORGOT_JWT_SECRET, (err, user) => {
+    if(err || user == null) {
+      req.user = null ;
+      res.send({status: false, message: "your url probably expired, or some error occured, please try again!"});
+    } else {
+      req.user = user.username ;
+    }
+  });
+  next() ;
+}
+
 module.exports = {
-    checkCredentials, checkToken, findUser
+    checkCredentials, checkToken, findUser, verifyToken
 }

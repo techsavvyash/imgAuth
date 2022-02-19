@@ -1,9 +1,9 @@
 const Users = require("../config/db.js").Users
-const generateJWT = require("../util/generateJWT.js").generateJWT
+const generateJWT = require("../util/utils.js").generateJWT
 const path = require('path')
 
 exports.getRegister = (req, res) => {
-    if(req.user == null) res.sendFile(path.join(__dirname, '../public/pages/register.html'))
+    if(req.user == null) res.sendFile(path.join(__dirname, '../../public/pages/register.html'))
     else res.redirect('/success')
 }
 
@@ -17,7 +17,7 @@ exports.postRegister = async (req, res) => {
     // else all the discrepencies in the credentials have already been taken care of
     // by the checkCredentials middleware so we just create a user and log him in
     try {
-      const user = await Users.create({username: req.body.username, pwd: req.body.pwd}) ;
+      const user = await Users.create({name: req.body.name, username: req.body.username, pwd: req.body.pwd}) ;
       console.log(user.username)
       req.session.token = generateJWT(user.username);
       res.send({status: true, message: "user created successfully and you have been logged in!"});

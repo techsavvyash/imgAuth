@@ -10,10 +10,16 @@ let count = 0 ;
 let pwd = []
 
 pwd_img.addEventListener("click", (event) => {
-    x = event.offsetX; y = event.offsetY ;
+    
     count++ ;
     counter.innerHTML = "Points: " + count ;
+    ratio = 1
+    if(pwd_img.offsetHeight != 768) {
+        ratio = pwd_img.offsetHeight/768 ;
+    }
+    x = (event.offsetX)/ratio; y = (event.offsetY)/ratio ;
     pwd.push(x,y)
+    console.log(x, y)
     password.value = pwd.toString();
 })
 
@@ -40,7 +46,7 @@ loginBtn.onclick = (event) => {
             window.location = '/success'
         } else {
             console.log(res.data)
-            alert("Invalid credentials, click the points in the same sequence as done during registration")
+            alert(res.data.message)
         }
-    } )
+    })
 }

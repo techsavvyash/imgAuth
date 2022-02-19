@@ -7,13 +7,15 @@
     <title> IMGAuth-Login </title>
     <script async src="../js/axios.min.js"></script>
     <script async defer src ="../js/login.js"></script>
+    <link rel = "stylesheet" href="./css/bootstrap.min.css">
+    <link rel = "stylesheet" href = "./css/style.css">
 </head>
 <body>
-    <h1>Hey, there this is the login page!!</h1>
+    <div class ="cont">
+    <h1>Hey, there this is the login page!!</h1> <br>
     <div>
-    <form id = "loginForm" action = "/login" method = "POST">
-        <label> username </label>
-        <input id="username" type="text"> <br>
+        <label> Email </label> 
+        <input required id="username" type="text"> <br>
         <div> Click your password points in the image below </div>
         <div id ="counter">
             Points: 0
@@ -23,10 +25,10 @@
         </div>
         <input type="hidden" id = "pwd">
         <div>
-            <button type ="submit" id="loginBtn"> Login </button>
-            <button id = "cancel"> Discard Last Click </button>
+            <button type ="submit" class="btn btn-primary" id="loginBtn"> Login </button>
+            <button class="btn btn-primary" id = "cancel"> Discard Last Click </button>
         </div>
-    </form>
+    </div>
     </div>
 </body>
 </html>

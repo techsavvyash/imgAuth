@@ -5,19 +5,20 @@ const session = require('express-session') ;
 require('dotenv').config() ;
 const { db, Users } = require('./config/db.js') ;
 const {checkToken, findUser, checkCredentials} = require("./controllers/middleware")
-
+const path = require('path');
+const { validateEmail, generateOTP, sendEmail, generateJWT } = require('./util/utils.js');
 
 // middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use('/', express.static(__dirname + '/public'))
+app.use('/', express.static(path.join(__dirname, '../public')))
 app.use(session({
   secret: process.env.SESSION_SECRET,
   saveUninitialized: true,
   resave: true,
   SameSite: 'strict',
 }))
-
+app.set('view engine', 'hbs')
 
 // ROUTE HANDLERS
 app.use(require("./routes/login"))
@@ -30,8 +31,8 @@ app.get('/success', checkToken, findUser,  async (req, res) => {
    res.redirect('/login')
    return ;
  }
- res.sendFile(__dirname + '/public/pages/success.html')
-
+ //res.sendFile(path.join(__dirname, '../public/pages/success.html'))
+ res.render('success', {name: req.user.username})
 })
 
 

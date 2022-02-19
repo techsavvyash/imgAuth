@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> IMGAuth: Change Password </title>
+    <title> IMGAuth-Register </title>
     <script async src = "../js/axios.min.js"></script>
-    <script async src = "../js/change.js"></script>
+    <script async src = "../js/register.js"></script>
+    <link rel = "stylesheet" href="./css/bootstrap.min.css">
+    <link rel = "stylesheet" href = "./css/style.css">
 </head>
 <body>
-    <h1>Hey, there this is the update password page!!</h1>
+    <div class ="cont">
+    <h1>Hey, there this is the registration page!!</h1>
     <div>
-        <label> username </label>
+        <label>Name: </label>
+        <input  required id = "name" type="text"> <br>
+        <label> Email </label> 
         <input id="userName" type="text"> <br>
         <div> Click your password points in the image below </div>
         <div id ="counter">
@@ -21,9 +26,10 @@
             <img src = "../black-suv-761815.jpg" alt="pwd_img" id ="pwd_img">
         </div>
         <div>
-            <button type = "submit" id="registerBtn" disabled> Register </button>
-            <button id = "cancel"> Discard Last Click </button>
+            <button class="btn btn-primary" type = "submit" id="registerBtn" disabled> Register </button>
+            <button class="btn btn-primary" id = "cancel"> Discard Last Click </button>
         </div>
     </div>
+</div>
 </body>
 </html>
