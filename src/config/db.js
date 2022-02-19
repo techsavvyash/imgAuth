@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 
 const db = new Sequelize({
   dialect: 'sqlite',
-  storage: __dirname + '/users.db'
+  storage: '../../users.db'
 })
 
 
@@ -24,21 +24,6 @@ const Users = db.define('user', {
     allowNull: false
   }
 });
-
-/*
-async function task() {
-  await db.sync() ;
-  
-
-  await Users.create({
-    username: 'yash',
-    pwd: 'test'
-  })
-
-}
-
-task();
-*/ 
 
 module.exports = {
   db, Users
