@@ -8,8 +8,8 @@ services:
       dockerfile: ./Dockerfile
     environment:
       NODE_ENV: production
-      JWT_SECRET: '8dab432073235298d81244a468c743743f7a4a755289b4cd38654810f648c6d08b4fe424eb390db32be16590d1f3ac8d3baf5fd6665b7dabfecfeba526a560c1'
+      JWT_SECRET: 'YOUR JWT SECRET HERE'
       PORT: 8080
-      SESSION_SECRET: 'b0c72c4b25e5405c0f86b66cc150fdaf150798b2185bfd6d8c652465eba64b3438eafdde403f9b6405b31c1dea78481b628a0cf6a2e4e2b5d1cfe347acebfbda'
+      SESSION_SECRET: 'YOUR SESSION SECRET HERE'
     ports:
       - 8080:8080

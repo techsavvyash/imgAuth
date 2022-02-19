@@ -1,15 +1,15 @@
 const express = require('express');
 const app = express();
 const jwt = require('jsonwebtoken');
-const session = require('express-session')
+const session = require('express-session') ; 
 require('dotenv').config() ;
-const { db, Users } = require('./db.js')
+const { db, Users } = require('./db.js') ;
 
 function generateJWT(username) {
   //the jwt contains the username and expires in 5 minutes
   return jwt.sign({username}, process.env.JWT_SECRET, { expiresIn: 5*60*1000 }) ;
 }
-console.log(process.env.JWT_SECRET)
+
 // middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -40,10 +40,19 @@ async function checkCredentials(req, res, next) {
       }
     }
   }
+  req.user = username ;
+  next() ;
+}
 
+async function findUser(req, res, next) {
+  const username = req.user ;
   try {
-    const user = await Users.findOne({ where: {username}})
-    req.user = user ;
+    if(username == null) {
+      req.user = null ;
+    } else {
+      const user = await Users.findOne({ where: {username}})
+      req.user = user ;
+    }
     next() ;
   } catch(err) {
     console.log(err)
@@ -52,45 +61,55 @@ async function checkCredentials(req, res, next) {
   }
 }
 
-async function checkToken(req, res, next) {
+function checkToken(req, res, next) {
+  req.user = null ;
   const token = req.session.token ;
   if(token == null) {
     res.user = null ;
-    next()
+    
   }
-
+  
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if(err) {
+    if(err || user == null) {
       req.user = null ;
-      next() ;
+    } else {
+      req.user = user.username ;
     }
-
-    req.user = user ;
-    next() ;
-  })
-
-
+    
+  });
+  next()
 }
 
 // route handlers
-app.get('/login', (req, res) => {
-  res.sendFile(__dirname + '/public/pages/login.html')
+app.get('/login', checkToken, findUser, (req, res) => {
+  if(req.user == null) res.sendFile(__dirname + '/public/pages/login.html')
+  else res.redirect('/success')
 })
 
 app.get('/register', (req, res) => {
   res.sendFile(__dirname + '/public/pages/register.html')
 })
 
-app.get('/success', checkToken, (req, res) => {
+app.get('/success', checkToken, findUser,  async (req, res) => {
   if(req.user == null) {
     res.redirect('/login')
     return ;
   }
   res.sendFile(__dirname + '/public/pages/success.html')
+  
+})
+
+app.get('/change', checkToken, findUser, async (req, res) => {
+  if(req.user == null) {
+    res.redirect('/login')
+    return ;
+  }
+
+  res.sendFile(__dirname + '/public/pages/change.html')
 })
 
 //login route
-app.post('/login', checkCredentials, (req, res) => {
+app.post('/login', checkCredentials, findUser, (req, res) => {
   const { username, pwd} = req.body
   const user = req.user ; 
   if(req.user == null) {
@@ -101,8 +120,8 @@ app.post('/login', checkCredentials, (req, res) => {
   try {
     const enteredPwd = pwd.split(',') ;
     const userPwd = user.pwd.split(',') ;
-    //console.log("Entered Pwd: ", enteredPwd) ;
-    //console.log("UserPwd: ", userPwd)
+    // console.log("Entered Pwd: ", enteredPwd) ;
+    // console.log("UserPwd: ", userPwd)
     if(enteredPwd.length !== userPwd.length) {
       res.send({status: false, message: "invalid credentials"}) ;
       return ; 
@@ -121,6 +140,7 @@ app.post('/login', checkCredentials, (req, res) => {
       req.session.token = generateJWT(user.username) ;
       res.send({status: true, message: "login succesful"})
       //res.redirect('/success')
+      //res.render("success", {text: "Login Successful"})
     }
   } catch(err) {
     console.log(err);
@@ -130,9 +150,10 @@ app.post('/login', checkCredentials, (req, res) => {
 
 
 //register route
-app.post('/register', checkCredentials, async (req, res) => {
-  if(req.user) {
+app.post('/register', checkCredentials, findUser, async (req, res) => {
+  if(req.user != null) {
     // case when the username is already taken
+    console.log(req.user)
     res.send({staus: false, message: "User already exists, kindly login!"});
     return ;
   }
@@ -149,6 +170,26 @@ app.post('/register', checkCredentials, async (req, res) => {
   }
 });
 
+app.post('/change', checkCredentials, checkToken, findUser, async (req, res, next) => {
+  if(req.user == null) {
+    res.redirect('/login')
+    return ;
+  }
+
+  const {username, pwd} = req.body ;
+  
+  try {
+    await Users.update({
+      pwd: pwd.toString()
+    }, {where: {username: req.user.username}});
+    req.session.token = '' ;
+    res.send({status: true, message: "The password has been updated, kindly login again!"});
+  } catch(err) {
+    console.log(err) ;
+    res.send({status: false, message: "Some error occured!"}) ;
+  }
+})
+
 
 // starting the server if db starts up fine
 db.sync().then(
@@ -159,5 +200,6 @@ db.sync().then(
   console.error(new Error(err))
   console.error("Error:", err)
 })
+
 
 
