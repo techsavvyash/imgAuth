@@ -3,7 +3,7 @@ let counter = document.getElementById('counter')
 let cancel = document.getElementById('cancel')
 let registerBtn = document.getElementById('registerBtn')
 let loginForm  = document.getElementById('loginForm')
-let userName = document.getElementById('userName')
+let userName = document.getElementById('username')
 
 let count = 0 ;
 let pwd = []
@@ -35,7 +35,7 @@ registerBtn.onclick = (event) => {
         username: userName.value,
         pwd: pwd.toString()
     }
-    axios.post('/change', data).then(res => {
+    axios.post(window.location.pathname, data).then(res => {
         alert(res.data.message)
         if(res.data.status) {
             window.location = '/login'

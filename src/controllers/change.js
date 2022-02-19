@@ -55,6 +55,7 @@ exports.postForget = async (req, res) => {
       text: `Follow this link to change your password http://127.0.0.1:8080/change/${resetId}`
     })
     res.send({status: true, message: "An email has been sent to your registered email, kindly follow the steps to reset your password"});
+    return ;
   } catch(err) {
     console.log(err);
     res.send({status: false, message: "Please try again, some error occured!"});
