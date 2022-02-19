@@ -6,7 +6,7 @@ const path = require('path')
 function checkCredentials(req, res, next) {
     const {username, pwd} = req.body 
     if(!username || !pwd) {
-      res.send({status: false, message: "invalid credentials"}) ;
+      res.send({status: false, message: "invalid credentials,make sure have entered the username"}) ;
       return ;
     } else {
       const password = pwd.split(',')
@@ -23,6 +23,7 @@ function checkCredentials(req, res, next) {
       }
     }
     req.user = username ;
+    console.log("checkCredentials success")
     next() ;
 }
   
@@ -65,14 +66,18 @@ function checkToken(req, res, next) {
 function verifyToken(req, res, next) {
   const id = req.params.id ;
   req.user = null ;
-  jwt.verify(token, process.env.FORGOT_JWT_SECRET, (err, user) => {
+  jwt.verify(id, process.env.JWT_SECRET, (err, user) => {
     if(err || user == null) {
       req.user = null ;
       res.send({status: false, message: "your url probably expired, or some error occured, please try again!"});
+      console.log("executed")
+      
+      return ;
     } else {
       req.user = user.username ;
     }
   });
+  console.log("verify token complete")
   next() ;
 }
 

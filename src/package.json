@@ -1,10 +1,10 @@
 {
   "name": "src",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -21,5 +21,10 @@
     "otp-generator": "^4.0.0",
     "sequelize": "^6.16.1",
     "sqlite3": "^5.0.2"
-  }
+  },
+  "script": {
+    "start": "node server.js"
+  },
+  "devDependencies": {},
+  "description": ""
 }

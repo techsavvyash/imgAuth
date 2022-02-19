@@ -11,10 +11,6 @@ exports.generateJWT = (username) => {
     return jwt.sign({username}, process.env.JWT_SECRET, { expiresIn: 5*60*1000 }) ;
 }
 
-exports.generateForgotJWT = (username) => {
-    //the jwt contains the username and expires in 5 minutes
-    return jwt.sign({username}, process.env.FORGOT_JWT_SECRET, { expiresIn: 5*60*1000 }) ;
-}
 
 exports.validateEmail = (email) => {
     return String(email)

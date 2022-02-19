@@ -4,6 +4,7 @@ let cancel = document.getElementById('cancel')
 let registerBtn = document.getElementById('registerBtn')
 let loginForm  = document.getElementById('loginForm')
 let userName = document.getElementById('userName')
+let name = document.getElementById('name');
 
 let count = 0 ;
 let pwd = []
@@ -32,6 +33,7 @@ cancel.onclick = (event) => {
 registerBtn.onclick = (event) => {
     event.preventDefault();
     const data = {
+        name: name.value,
         username: userName.value,
         pwd: pwd.toString()
     }

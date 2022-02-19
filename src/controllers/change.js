@@ -1,4 +1,5 @@
 const Users = require("../config/db.js").Users
+const { fail } = require("assert")
 const path = require('path')
 const generateJWT = require('../util/utils').generateJWT
 const sendEmail = require('../util/utils').sendEmail
@@ -19,7 +20,10 @@ exports.postChange = async (req, res, next) => {
       return ;
     }
 
-    const {pwd} = req.body ;
+    const {username, pwd} = req.body ;
+    if(username !== req.user.username) {
+      res.send({status: false, message: "Invalid credentials, make sure you have entered the correct email and included enough points!"})
+    }
     try {
       await Users.update({
         pwd: pwd.toString()
@@ -52,9 +56,10 @@ exports.postForget = async (req, res) => {
     await sendEmail({
       to: user.username,
       subject: "IMGAuth: Password Retrieval OTP",
-      text: `Follow this link to change your password http://127.0.0.1:8080/change/${resetId}`
+      text: `Follow this link to change your password https://morning-lake-28894.herokuapp.com//change/${resetId}`
     })
     res.send({status: true, message: "An email has been sent to your registered email, kindly follow the steps to reset your password"});
+    return ;
   } catch(err) {
     console.log(err);
     res.send({status: false, message: "Please try again, some error occured!"});

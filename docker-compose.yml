@@ -1,15 +1,21 @@
 version: '3.4'
 
 services:
-  src:
-    image: src
+  imgauth:
+    image: imgauth
     build:
-      context: src
+      context: .
       dockerfile: ./Dockerfile
     environment:
       NODE_ENV: production
-      JWT_SECRET: 'YOUR JWT SECRET HERE'
-      PORT: 8080
-      SESSION_SECRET: 'YOUR SESSION SECRET HERE'
+      JWT_SECRET: '8dab432073235298d81244a468c743743f7a4a755289b4cd38654810f648c6d08b4fe424eb390db32be16590d1f3ac8d3baf5fd6665b7dabfecfeba526a560c1'
+      FORGOT_JWT_SECRET : 'f9b73bce3cea58a7e23fbcae2aa46504'
+      PORT : 8080
+      SESSION_SECRET : 'b0c72c4b25e5405c0f86b66cc150fdaf150798b2185bfd6d8c652465eba64b3438eafdde403f9b6405b31c1dea78481b628a0cf6a2e4e2b5d1cfe347acebfbda'
+      MAIL_SERVICE : "Gmail"
+      SERVICE_HOST : "smtp.gmail.com"
+      SERVICE_USER : "noedmailertest@gmail.com"
+      SERVICE_PASS : "thisistest"
+      MAIL_FROM : "noedmailertest@gmail.com"
     ports:
       - 8080:8080
