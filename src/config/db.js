@@ -1,11 +1,10 @@
 const Sequelize = require('sequelize')
+var path = require('path')
 
 const db = new Sequelize({
   dialect: 'sqlite',
-  storage: '../../users.db'
+  storage: path.join(__dirname, '../users.db')
 })
-
-
 
 const Users = db.define('user', {
 

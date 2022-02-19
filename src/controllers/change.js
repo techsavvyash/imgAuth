@@ -9,7 +9,7 @@ exports.getChange = (req, res) => {
       return ;
     }
   
-    res.sendFile(path.join(__dirname, '../public/pages/change.html'))
+    res.sendFile(path.join(__dirname, '../../public/pages/change.html'))
 }
 
 exports.postChange = async (req, res, next) => {

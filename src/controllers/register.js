@@ -3,7 +3,7 @@ const generateJWT = require("../util/generateJWT.js").generateJWT
 const path = require('path')
 
 exports.getRegister = (req, res) => {
-    if(req.user == null) res.sendFile(path.join(__dirname, '../public/pages/register.html'))
+    if(req.user == null) res.sendFile(path.join(__dirname, '../../public/pages/register.html'))
     else res.redirect('/success')
 }
 
