@@ -56,7 +56,7 @@ exports.postForget = async (req, res) => {
     await sendEmail({
       to: user.username,
       subject: "IMGAuth: Password Retrieval OTP",
-      text: `Follow this link to change your password http://127.0.0.1:8080/change/${resetId}`
+      text: `Follow this link to change your password https://morning-lake-28894.herokuapp.com//change/${resetId}`
     })
     res.send({status: true, message: "An email has been sent to your registered email, kindly follow the steps to reset your password"});
     return ;
