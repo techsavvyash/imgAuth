@@ -1,4 +1,5 @@
 const Users = require("../config/db.js").Users
+const { fail } = require("assert")
 const path = require('path')
 const generateJWT = require('../util/utils').generateJWT
 const sendEmail = require('../util/utils').sendEmail
@@ -19,7 +20,10 @@ exports.postChange = async (req, res, next) => {
       return ;
     }
 
-    const {pwd} = req.body ;
+    const {username, pwd} = req.body ;
+    if(username !== req.user.username) {
+      res.send({status: false, message: "Invalid credentials, make sure you have entered the correct email and included enough points!"})
+    }
     try {
       await Users.update({
         pwd: pwd.toString()
