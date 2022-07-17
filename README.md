@@ -6,7 +6,7 @@ It is a graphical user authentication technique, where in the users are required
 "Pass-Points" is different from the "Pass-Position" authentication technique, where in the password is the relative position of the points wrt each other (can be thought of like a pattern)
 
 # Features in the app
-- Login
+- Login (the session persists for 5 minutes, i.e. the success route can be directly accessed after successful authentication for 5 minutes)
 - Registration
 - Changing Password for authenticated users
 - Resetting forgotten password for unauthenticated users (a proper working email account is required for this)
@@ -25,6 +25,15 @@ It is a graphical user authentication technique, where in the users are required
     ├── util
     └── views
 ```
+
+# API Routes
+- `/` is the homepage
+- `/login` for login
+- `/register` to register for a new account
+- `/success` viewable after successful authentication
+- `/forgot` to reset your forgotton password
+- `/change` to update your password after authentication
+ 
 # Running the app
 1. Using `docker` and `docker-compose`
 -   Edit the docker-compose.yml to add the required environment variables, after editing your docker-compose.yml should look something like
